@@ -17,7 +17,7 @@ if(isset($_POST['login'])){
         $msg="Invalid Login";
     }
 }
-?>
+
 
 <link rel="stylesheet" href="../css/style.css">
 
