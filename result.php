@@ -66,7 +66,7 @@ else{
 <button class="btn">Retry Test</button>
 </a>
 
-<a href="performance.php"
+<a href="performance.php">
 <button class="btn">View Performance</button>
 </a>
 
