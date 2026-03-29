@@ -22,7 +22,7 @@ if(!isset($_SESSION['admin'])){
     <a href="view_questions.php"><button class="btn">View / Edit Questions</button></a>
     </div>
 
-    <div class="card">
+    <div class="car">
     <h3>Study Material</h3>
     <a href="add_study.php"><button class="btn">Add Study Content</button></a>
     <a href="view_study.php"><button class="btn">View / Edit Study</button></a>
