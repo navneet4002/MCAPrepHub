@@ -13,7 +13,7 @@ if(!isset($_SESSION['admin'])){
     <div class="card">
     <h3>Manage Tests</h3>
     <a href="add_test.php"><button class="btn">Add Test</button></a>
-    <a href="view_tests.php"><button class="btn">View / Edit Tests</butto></a>
+    <a href="view_tests.php"><button class="btn">View / Edit Tests</button></a>
     </div>
 
     <div class="card">
