@@ -21,7 +21,7 @@ if(isset($_POST['add'])){
 
 <form method="POST">
 
-<input name="title" placeholder"Title">
+<input name="title" placeholder="Title">
 
 <select name="category">
 <option value="maths">Maths</option>
