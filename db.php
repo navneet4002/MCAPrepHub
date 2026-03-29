@@ -1,6 +1,6 @@
 <?php
 $conn = mysqli_connect("localhost","root","","mca_mock");
-if(!$conn){
+if(!$con){
     die("DB Connection Failed");
 }
 ?>
