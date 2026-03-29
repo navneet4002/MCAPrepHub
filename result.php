@@ -29,7 +29,7 @@ while($row=mysqli_fetch_assoc($q)){
 mysqli_query($conn,"INSERT INTO results(user_id,test_id,score) VALUES('$user_id','$test_id','$score')");
 ?>
 
-<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/style.css"
 
 <div class="center">
 
