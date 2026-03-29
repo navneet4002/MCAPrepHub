@@ -7,7 +7,7 @@ if(!isset($_SESSION['user'])){
 }
 
 $email = $_SESSION['user'];
-$user = mysqli_fetch_assoc(mysqli_query($conn,"SELECT * FROM users WHERE email='$email'"));
+$user = mysqli_fetch_assoc(mysqli_query($conn,"SELECT * FROM users WHERE email='$email'"))
 $user_id = $user['id'];
 
 $test_id = $_POST['test_id'];
