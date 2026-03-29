@@ -19,7 +19,7 @@ if(isset($_POST['add'])){
 
 <link rel="stylesheet" href="../css/style.css">
 
-<div class="form-box">
+<div class="form-box"
 <h2>Add Question</h2>
 
 <form method="POST">
