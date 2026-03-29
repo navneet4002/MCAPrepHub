@@ -29,7 +29,7 @@ if(isset($_POST['add'])){
 <option value="computer">Computer</option>
 </select>
 
-<textfield name="description" placeholder="Description"></textarea>
+<textarea name="description" placeholder="Description"></textarea>
 
 <input name="link" placeholder="YouTube Link">
 
