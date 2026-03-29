@@ -35,7 +35,7 @@ mysqli_query($conn,"INSERT INTO results(user_id,test_id,score) VALUES('$user_id'
 
 <div class="result-box">
 
-<h2>Test Completed 🎉</h2>
+<h2>Test Completed 🎉</h2
 
 <p><b>Your Score:</b> <?php echo $score; ?> / <?php echo $total; ?></p>
 
