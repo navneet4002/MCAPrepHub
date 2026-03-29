@@ -7,7 +7,7 @@ if(isset($_POST['register'])){
     $email=$_POST['email'];
     $password=$_POST['password'];
 
-    $check=mysqli_query($conn,"SELECT * ROM users WHERE email='$email'");
+    $check=mysqli_query($conn,"SELECT * FROM users WHERE email='$email'");
 
     if(mysqli_num_rows($check)>0){
         $msg="Email already exists";
