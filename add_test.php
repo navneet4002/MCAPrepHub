@@ -5,13 +5,12 @@ $msg = "";
 
 if(isset($_POST['add'])){
 
-    //  Get form data
     $title = $_POST['title'];
-    $duration = $_POST['duration'];
+    $minutes = $_POST['duration'];   
+    $duration = $minutes * 60;       
     $desc = $_POST['description'];
     $cat = $_POST['category'];   
 
-    // Insert into database
     mysqli_query($conn,"INSERT INTO tests(title,duration,description,category)
     VALUES('$title','$duration','$desc','$cat')");
 
@@ -21,13 +20,37 @@ if(isset($_POST['add'])){
 
 <link rel="stylesheet" href="../css/style.css">
 
+<div class="navbar">
+    <div><b>MCAPrepHub</b></div>
+</div>
+<div class="layout">
+
+    <div class="sidebar">
+        <h3>Admin Panel</h3>
+
+        <a href="admin_dashboard.php" class="active">Dashboard</a>
+        <a href="add_test.php">Add Test</a>
+        <a href="view_tests.php">View Tests</a>
+
+        <a href="add_question.php">Add Questions</a>
+        <a href="view_questions.php">View Questions</a>
+
+        <a href="add_study.php">Add Study Material</a>
+        <a href="view_study.php">View Study</a>
+
+        <a href="view_queries.php">Queries</a>
+        <a href="users.php">Users</a>
+
+        <a href="admin_login.php">Logout</a>
+    </div>
+
 <div class="form-box">
 <h2>Add Test</h2>
 
 <form method="POST">
 
 <input name="title" placeholder="Test Title" required>
-<input name="duration" placeholder="Duration (seconds)" required>
+<input type="number" name="duration" placeholder="Duration (minutes)" required>
 
 <!--  CATEGORY DROPDOWN -->
 <select name="category" required>
@@ -46,3 +69,5 @@ if(isset($_POST['add'])){
 <p><?php echo $msg; ?></p>
 
 </div>
+</div>
+<?php include("../includes/footer.php"); ?>

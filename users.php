@@ -1,13 +1,13 @@
 <?php
 include("../includes/db.php");
 
-$res = mysqli_query($conn,"SELECT * FROM tests");
+$res=mysqli_query($conn,"SELECT * FROM users");
+$count=mysqli_num_rows($res);
 ?>
-
 <!DOCTYPE html>
 <html>
 <head>
-    <title>View tests</title>
+    <title>Users</title>
     <link rel="stylesheet" href="/MCAPrepHub/Mca_Mock_Test/css/style.css">
 </head>
 
@@ -19,6 +19,7 @@ $res = mysqli_query($conn,"SELECT * FROM tests");
 
 <div class="layout">
 
+    <!-- ✅ SIDEBAR (admin ke liye alag bana sakte ho later) -->
     <div class="sidebar">
         <h3>Admin Panel</h3>
 
@@ -42,22 +43,23 @@ $res = mysqli_query($conn,"SELECT * FROM tests");
     <div class="main">
 
 
-<div class="container">
-<h2>All Tests</h2>
+<h2>Total Users: <?php echo $count; ?></h2>
+
+<table border="1" cellpadding="10">
+<tr>
+<th>Name</th>
+<th>Email</th>
+<th>Registered On</th>
+</tr>
 
 <?php while($row=mysqli_fetch_assoc($res)){ ?>
-
-<div class="card">
-    <h3><?php echo $row['title']; ?></h3>
-    <p><?php echo $row['category']; ?></p>
-
-    <a href="edit_test.php?id=<?php echo $row['id']; ?>">
-        <button class="btn">✏️ Edit</button>
-    </a>
-</div>
-
+<tr>
+<td><?php echo $row['name']; ?></td>
+<td><?php echo $row['email']; ?></td>
+<td><?php echo $row['created_at']; ?></td>
+</tr>
 <?php } ?>
 
-</div>
+</table>
 </div>
 </div>

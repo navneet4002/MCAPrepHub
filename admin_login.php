@@ -1,6 +1,7 @@
 <?php
 session_start();
 include("../includes/db.php");
+include("../includes/header.php");
 
 $msg="";
 
@@ -8,20 +9,34 @@ if(isset($_POST['login'])){
     $u=$_POST['username'];
     $p=$_POST['password'];
 
-    $res=mysqli_query($conn,"SELECT * FROM admin WHERE username='$u' AND password='$p'");
+   $res = mysqli_query($conn,"SELECT * FROM admin WHERE username='$u'");
+$data = mysqli_fetch_assoc($res);
 
-    if(mysqli_num_rows($res)>0){
-        $_SESSION['admin']=$u;
-        header("Location: admin_dashboard.php");
-    } else {
-        $msg="Invalid Login";
-    }
+if($data && password_verify($p, $data['password'])){
+    $_SESSION['admin']=$u;
+    header("Location: admin_dashboard.php");
+    exit();
+} else {
+    $msg="Invalid Login";
+}
 }
 ?>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+    <link rel="stylesheet" href="/MCAPrepHub/Mca_Mock_Test/css/style.css">
+</head>
 
-<link rel="stylesheet" href="../css/style.css">
+<body class="login-page">
 
-<div class="form-box">
+<div class="navbar">
+    <div><b>MCAPrepHub</b></div>
+</div>
+<div class="layout">
+    <div class="main">
+
+<div class="login-box">
 <h2>Admin Login</h2>
 
 <form method="POST">
@@ -31,4 +46,6 @@ if(isset($_POST['login'])){
 </form>
 
 <p><?php echo $msg; ?></p>
+</div>
+</div>
 </div>

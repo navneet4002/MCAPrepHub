@@ -6,71 +6,81 @@ include("includes/header.php");
 $category = isset($_GET['cat']) ? $_GET['cat'] : 'all';
 ?>
 
-<div class="container">
+<!-- LAYOUT WRAPPER -->
+<div class="layout">
 
-<h2>Topic Wise Tests</h2>
-<p style="color:#555; margin-bottom:20px;">
-Master each subject with focused topic-wise tests. Strengthen your weak areas and 
-excel in Mathematics, Reasoning, Computer Awareness
-</p>
-<!--  CATEGORY BUTTONS -->
-<div style="margin-bottom:20px;">
+    <!-- SIDEBAR (FIXED) -->
+    <?php include("includes/sidebar.php"); ?>
 
-<a href="dashboard.php?cat=all">
-<button class="btn" style="<?php if($category=='all') echo 'background:red'; ?>">
-All
-</button>
-</a>
+    <!-- MAIN CONTENT -->
+    <div class="main">
 
-<a href="dashboard.php?cat=full_mock">
-<button class="btn" style="<?php if($category=='full_mock') echo 'background:red'; ?>">
-Full Mock
-</button>
-</a>
+        <h2>Topic Wise Tests</h2>
 
-<a href="dashboard.php?cat=maths">
-<button class="btn" style="<?php if($category=='maths') echo 'background:red'; ?>">
-Maths
-</button>
-</a>
+        <p style="color:#555; margin-bottom:20px;">
+        Master each subject with focused topic-wise tests. Strengthen your weak areas and 
+        excel in Mathematics, Reasoning, and Computer Awareness.
+        </p>
 
-<a href="dashboard.php?cat=reasoning">
-<button class="btn" style="<?php if($category=='reasoning') echo 'background:red'; ?>">
-Reasoning
-</button>
-</a>
+        <!-- CATEGORY FILTER -->
+        <div style="margin-bottom:20px;">
 
-<a href="dashboard.php?cat=computer">
-<button class="btn" style="<?php if($category=='computer') echo 'background:red'; ?>">
-Computer
-</button>
-</a>
+            <a href="dashboard.php?cat=all">
+            <button class="btn <?php if($category=='all') echo 'active'; ?>">All</button>
+            </a>
+
+            <a href="dashboard.php?cat=full_mock">
+            <button class="btn <?php if($category=='full_mock') echo 'active'; ?>">Full Mock</button>
+            </a>
+
+            <a href="dashboard.php?cat=maths">
+            <button class="btn <?php if($category=='maths') echo 'active'; ?>">Maths</button>
+            </a>
+
+            <a href="dashboard.php?cat=reasoning">
+            <button class="btn <?php if($category=='reasoning') echo 'active'; ?>">Reasoning</button>
+            </a>
+
+            <a href="dashboard.php?cat=computer">
+            <button class="btn <?php if($category=='computer') echo 'active'; ?>">Computer</button>
+            </a>
+
+        </div>
+
+        <?php
+        // FILTER LOGIC
+        if($category == "all"){
+        $query = "SELECT * FROM tests ORDER BY created_at ASC";
+        } else {
+        $query = "SELECT * FROM tests WHERE category='$category' ORDER BY created_at ASC";
+        }
+
+        $res = mysqli_query($conn, $query);
+
+        if(mysqli_num_rows($res)>0){
+            while($row=mysqli_fetch_assoc($res)){
+        ?>
+
+        <div class="card">
+            <h3><?php echo $row['title']; ?></h3>
+
+            <p><b>Category:</b> <?php echo strtoupper($row['category']); ?></p>
+
+            <p><b>Duration:</b> <?php echo $row['duration']/60; ?> mins</p>
+
+            <a href="test.php?id=<?php echo $row['id']; ?>">
+                <button class="btn">Start Test</button>
+            </a>
+        </div>
+
+        <?php 
+            }
+        } else { 
+            echo "<p>No tests found</p>"; 
+        } 
+        ?>
+
+    </div>
 
 </div>
-
-<?php
-//  FILTER LOGIC
-if($category == "all"){
-    $query = "SELECT * FROM tests";
-} else {
-    $query = "SELECT * FROM tests WHERE category='$category'";
-}
-
-$res = mysqli_query($conn, $query);
-
-if(mysqli_num_rows($res)>0){
-while($row=mysqli_fetch_assoc($res)){
-?>
-
-<div class="card">
-    <h3><?php echo $row['title']; ?></h3>
-    <p><?php echo strtoupper($row['category']); ?></p>
-
-    <a href="test.php?id=<?php echo $row['id']; ?>">
-        <button class="btn">Start Test</button>
-    </a>
-</div>
-
-<?php }} else { echo "<p>No tests found</p>"; } ?>
-
-</div>
+<?php include("includes/footer.php"); ?>

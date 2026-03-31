@@ -1,11 +1,34 @@
-<link rel="stylesheet" href="css/style.css">
+<?php 
+if(session_status() == PHP_SESSION_NONE){
+    session_start();
+}
+?>
+
+<?php 
+if(session_status() == PHP_SESSION_NONE){
+    session_start();
+}
+?>
+
+<link rel="stylesheet" href="/MCAPrepHub/Mca_Mock_Test/css/style.css">
 
 <div class="navbar">
-    <h2>MCAPrep</h2>
-    <div>
-        <a href="dashboard.php">Tests</a>
-        <a href="study.php">Study</a>
-        <a href="performance.php">Performance</a>
-        <a href="logout.php">Logout</a>
+
+    <div class="logo">MCAPrepHub</div>
+
+    <div class="nav-right">
+
+        <a href="index.php">Home</a>
+        <a href="index.php#about">About</a>
+        <a href="contact.php">Contact</a>
+
+        <?php if(isset($_SESSION['name'])){ ?>
+            <div class="user-box">
+                <span class="avatar">👤</span>
+                <span class="user-name"><?php echo ucwords($_SESSION['name']); ?></span>
+            </div>
+        <?php } ?>
+
     </div>
+
 </div>

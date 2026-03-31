@@ -1,24 +1,21 @@
 <?php
 include("../includes/db.php");
 
-$res = mysqli_query($conn,"SELECT * FROM tests");
+$res=mysqli_query($conn,"
+SELECT u.name, u.email, l.login_time 
+FROM login_logs l
+JOIN users u ON l.user_id=u.id
+ORDER BY l.id DESC
+");
 ?>
-
-<!DOCTYPE html>
-<html>
-<head>
-    <title>View tests</title>
-    <link rel="stylesheet" href="/MCAPrepHub/Mca_Mock_Test/css/style.css">
-</head>
-
-<body>
-
+<link rel="stylesheet" href="/MCAPrepHub/Mca_Mock_Test/css/style.css">
 <div class="navbar">
     <div><b>MCAPrepHub</b></div>
 </div>
 
 <div class="layout">
 
+    <!-- ✅ SIDEBAR (admin ke liye alag bana sakte ho later) -->
     <div class="sidebar">
         <h3>Admin Panel</h3>
 
@@ -37,27 +34,25 @@ $res = mysqli_query($conn,"SELECT * FROM tests");
 
         <a href="admin_login.php">Logout</a>
     </div>
+<div class="main">
 
-    <!-- ✅ MAIN CONTENT -->
-    <div class="main">
+<h2>User Login Activity</h2>
 
-
-<div class="container">
-<h2>All Tests</h2>
+<table border="1" cellpadding="10">
+<tr>
+<th>Name</th>
+<th>Email</th>
+<th>Login Time</th>
+</tr>
 
 <?php while($row=mysqli_fetch_assoc($res)){ ?>
-
-<div class="card">
-    <h3><?php echo $row['title']; ?></h3>
-    <p><?php echo $row['category']; ?></p>
-
-    <a href="edit_test.php?id=<?php echo $row['id']; ?>">
-        <button class="btn">✏️ Edit</button>
-    </a>
-</div>
-
+<tr>
+<td><?php echo $row['name']; ?></td>
+<td><?php echo $row['email']; ?></td>
+<td><?php echo $row['login_time']; ?></td>
+</tr>
 <?php } ?>
 
-</div>
+</table>
 </div>
 </div>

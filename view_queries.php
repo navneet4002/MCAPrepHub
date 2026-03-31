@@ -1,13 +1,13 @@
 <?php
+session_start();
 include("../includes/db.php");
 
-$res = mysqli_query($conn,"SELECT * FROM tests");
+$res=mysqli_query($conn,"SELECT * FROM queries ORDER BY id DESC");
 ?>
-
 <!DOCTYPE html>
 <html>
 <head>
-    <title>View tests</title>
+    <title>View Queries</title>
     <link rel="stylesheet" href="/MCAPrepHub/Mca_Mock_Test/css/style.css">
 </head>
 
@@ -19,6 +19,7 @@ $res = mysqli_query($conn,"SELECT * FROM tests");
 
 <div class="layout">
 
+    <!-- ✅ SIDEBAR (admin ke liye alag bana sakte ho later) -->
     <div class="sidebar">
         <h3>Admin Panel</h3>
 
@@ -42,22 +43,27 @@ $res = mysqli_query($conn,"SELECT * FROM tests");
     <div class="main">
 
 
-<div class="container">
-<h2>All Tests</h2>
+<h2>User Queries</h2>
+
+<table border="1" cellpadding="10">
+<tr>
+<th>Subject</th>
+<th>Email</th>
+<th>Phone</th>
+<th>Message</th>
+<th>Date</th>
+</tr>
 
 <?php while($row=mysqli_fetch_assoc($res)){ ?>
-
-<div class="card">
-    <h3><?php echo $row['title']; ?></h3>
-    <p><?php echo $row['category']; ?></p>
-
-    <a href="edit_test.php?id=<?php echo $row['id']; ?>">
-        <button class="btn">✏️ Edit</button>
-    </a>
-</div>
-
+<tr>
+<td><?php echo $row['subject']; ?></td>
+<td><?php echo $row['email']; ?></td>
+<td><?php echo $row['phone']; ?></td>
+<td><?php echo $row['message']; ?></td>
+<td><?php echo $row['created_at']; ?></td>
+</tr>
 <?php } ?>
 
-</div>
+</table>
 </div>
 </div>

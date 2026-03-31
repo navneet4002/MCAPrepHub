@@ -5,7 +5,12 @@ include("includes/db.php");
 $cat = isset($_GET['cat']) ? $_GET['cat'] : 'maths';
 ?>
 
-<div class="container">
+<div class="layout">
+
+    <!-- SIDEBAR (FIXED) -->
+    <?php include("includes/sidebar.php"); ?>
+
+<div class="main">
 
 <h2>Study Materials</h2>
 <p style="color:#555;">
@@ -15,13 +20,13 @@ Master subjects with videos and notes
 <!-- TABS -->
 <div class="tabs">
     <a href="?cat=maths">
-        <button class="<?php if($cat=='maths') echo 'active'; ?>">Mathematics</button>
+        <button class="btn <?php if($cat=='maths') echo 'active'; ?>">Mathematics</button>
     </a>
     <a href="?cat=reasoning">
-        <button class="<?php if($cat=='reasoning') echo 'active'; ?>">Reasoning</button>
+        <button class="btn <?php if($cat=='reasoning') echo 'active'; ?>">Reasoning</button>
     </a>
     <a href="?cat=computer">
-        <button class="<?php if($cat=='computer') echo 'active'; ?>">Computer</button>
+        <button class="btn <?php if($cat=='computer') echo 'active'; ?>">Computer</button>
     </a>
 </div>
 
@@ -44,8 +49,13 @@ while($row=mysqli_fetch_assoc($res)){
     allowfullscreen></iframe>
 </div>
 
+
 <?php }} else { echo "<p>No content available</p>"; } ?>
 
 </div>
 
+</div>
+
+</div>
+<?php include("includes/footer.php"); ?>
 </div>
