@@ -33,7 +33,7 @@ if(isset($_POST['register'])){
 <html>
 <head>
     <title>Register</title>
-    <link rel="stylesheet" href="/MCAPrepHub/Mca_Mock_Test/css/style.css">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body class="login-page">

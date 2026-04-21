@@ -1,148 +1,276 @@
 <?php
 session_start();
 include("includes/db.php");
+include("includes/header.php");
 
-$test_id = $_GET['id'];
+$test_id = $_GET['id'] ?? 0;
 
-//  Get test info (for timer)
 $test = mysqli_fetch_assoc(mysqli_query($conn,"SELECT * FROM tests WHERE id='$test_id'"));
+$time = $test['duration'] ?? 600;
 
-$time = $test['duration'];   
-$minutes = intval($time / 60);      
-
-//  Get questions
+// QUESTIONS
+$questions = [];
 $res = mysqli_query($conn,"SELECT * FROM questions WHERE test_id='$test_id'");
+while($row = mysqli_fetch_assoc($res)){
+    $questions[] = $row;
+}
+
+$total = count($questions);
 ?>
 
-<link rel="stylesheet" href="css/style.css">
+<div class="exam-wrapper">
 
-<!-- TIMER -->
-<div class="test-header">
-    <h2>Test</h2>
-    <h3 id="timer">Time: <?php echo $minutes; ?>:00</h3>
+<!-- 🔥 FIXED TIMER BAR -->
+<div class="timer-bar">
+    <div class="left-title">📋 Online Test</div>
+
+    <div class="timer-box">
+        ⏳ <span id="time-text">00:00</span>
+    </div>
+
+    <button class="submit-btn" onclick="submitTest()">Submit Test</button>
 </div>
 
-<div class="test-container">
+<div class="exam-body">
+
+<!-- LEFT -->
+<div class="left">
+
+<h2><?php echo $test['title']; ?></h2>
+<p>Question <span id="qno">1</span> of <?php echo $total; ?></p>
 
 <form method="POST" action="result.php" id="form">
 
 <input type="hidden" name="test_id" value="<?php echo $test_id; ?>">
 <input type="hidden" name="time_taken" id="time_taken">
 
-<div class="nav-panel">
-<?php 
-$i = 1;
+<?php foreach($questions as $index => $q){ ?>
 
-// NAVIGATION LOOP
-$qno = 1;
-while($q=mysqli_fetch_assoc($res)){ ?>
-    <button type="button" class="q-btn" 
-    id="btn<?php echo $q['id']; ?>" 
-    onclick="scrollToQ(<?php echo $q['id']; ?>)">
-        <?php echo $i++; ?>
-    </button>
-<?php } ?>
-</div>
+<div class="question-box" id="q<?php echo $index; ?>">
 
-<?php
-$res = mysqli_query($conn,"SELECT * FROM questions WHERE test_id='$test_id'");
+<h3><?php echo $q['question']; ?></h3>
 
-// QUESTIONS LOOP
-$qno = 1;
-while($q=mysqli_fetch_assoc($res)){ ?>
-
-<div class="card" id="q<?php echo $q['id']; ?>">
-
-    <p><b>Q<?php echo $qno++; ?>. <?php echo $q['question']; ?></b></p>
-
-    <label>
-        <input type="radio" name="q<?php echo $q['id']; ?>" value="1">
-        <?php echo $q['option1']; ?>
-    </label><br>
-
-    <label>
-        <input type="radio" name="q<?php echo $q['id']; ?>" value="2">
-        <?php echo $q['option2']; ?>
-    </label><br>
-
-    <label>
-        <input type="radio" name="q<?php echo $q['id']; ?>" value="3">
-        <?php echo $q['option3']; ?>
-    </label><br>
-
-    <label>
-        <input type="radio" name="q<?php echo $q['id']; ?>" value="4">
-        <?php echo $q['option4']; ?>
+<?php for($i=1;$i<=4;$i++){ ?>
+<div class="opt">
+    <input type="radio" 
+        name="q<?php echo $q['id']; ?>" 
+        id="q<?php echo $q['id'].'_'.$i; ?>" 
+        value="<?php echo $i; ?>">
+    <label for="q<?php echo $q['id'].'_'.$i; ?>">
+        <?php echo $q['option'.$i]; ?>
     </label>
 </div>
-
-
 <?php } ?>
 
-<button type="submit" class="btn">Submit Test</button>
+</div>
+
+<?php } ?>
 
 </form>
 
+<div class="bottom-nav">
+    <button onclick="prevQ()">⬅ Previous</button>
+    <button onclick="nextQ()">Save & Next ➡</button>
 </div>
 
+</div>
 
-<!--  TIMER SCRIPT -->
+<!-- RIGHT -->
+<div class="right">
+
+<h3>Question Navigation</h3>
+
+<div class="grid">
+<?php for($i=0;$i<$total;$i++){ ?>
+    <div class="box" id="nav<?php echo $i; ?>" onclick="goToQ(<?php echo $i; ?>)">
+        <?php echo $i+1; ?>
+    </div>
+<?php } ?>
+</div>
+
+</div>
+
+</div>
+</div>
+
 <script>
-let totalTime = <?php echo $time; ?>; // original total time
-let time = totalTime;
+let current = 0;
+let total = <?php echo $total; ?>;
 
-let timer = setInterval(function() {
+showQ(current);
 
-    let minutes = Math.floor(time / 60);
-    let seconds = time % 60;
+function showQ(i){
+    document.querySelectorAll(".question-box").forEach(q=>q.style.display="none");
+    document.getElementById("q"+i).style.display="block";
+    document.getElementById("qno").innerText = i+1;
+}
 
-    if (seconds < 10) {
-        seconds = "0" + seconds;
+function nextQ(){
+    mark();
+    if(current < total-1){
+        current++;
+        showQ(current);
     }
+}
 
-    document.getElementById("timer").innerHTML =
-        "Time: " + minutes + ":" + seconds;
+function prevQ(){
+    if(current > 0){
+        current--;
+        showQ(current);
+    }
+}
 
-    // store time taken
+function goToQ(i){
+    current = i;
+    showQ(i);
+}
+
+function mark(){
+    let radios = document.querySelectorAll(`#q${current} input`);
+    radios.forEach(r=>{
+        if(r.checked){
+            document.getElementById("nav"+current).classList.add("done");
+        }
+    });
+}
+
+function submitTest(){
+    document.getElementById("form").submit();
+}
+
+// 🔥 TIMER
+let time = <?php echo $time ? $time : 600; ?>;
+let totalTime = time;
+
+function updateTimer(){
+    let m = Math.floor(time/60);
+    let s = time % 60;
+
+    if(s < 10) s = "0" + s;
+    if(m < 10) m = "0" + m;
+
+    document.getElementById("time-text").innerText = m + ":" + s;
     document.getElementById("time_taken").value = totalTime - time;
+}
 
-    // last 1 min red
-    if(time <= 60){
-        document.getElementById("timer").style.color = "red";
-    }
+updateTimer();
 
+let timerInterval = setInterval(() => {
     time--;
+    updateTimer();
 
-    if (time < 0) {
-        clearInterval(timer);
-        alert("Time is up! Submitting test...");
-        document.getElementById("form").submit();
+    if(time < 0){
+        clearInterval(timerInterval);
+        alert("⏰ Time up!");
+        submitTest();
     }
-
 }, 1000);
 </script>
 
-<script>
-function scrollToQ(id){
-    let element = document.getElementById("q"+id);
+<style>
 
-    window.scrollTo({
-        top: element.offsetTop - 80, 
-        behavior: "smooth"
-    });
+/* 🔥 TIMER BAR FIX */
+.timer-bar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:12px 20px;
+    background:#fff;
+    border-bottom:1px solid #ddd;
 }
-</script>
-<script>
-document.querySelectorAll("input[type=radio]").forEach(radio => {
-    radio.addEventListener("change", function(){
 
-        let name = this.name; // q5
-        let id = name.replace("q","");
+/* TIMER BOX */
+.timer-box{
+    background:#ef4444;
+    padding:10px 20px;
+    border-radius:10px;
+    color:white;
+    font-weight:bold;
+    font-size:18px;
+}
 
-        let btn = document.getElementById("btn"+id);
+/* BUTTON */
+.submit-btn{
+    background:#2563eb;
+    color:white;
+    border:none;
+    padding:10px 16px;
+    border-radius:8px;
+}
 
-        btn.style.background = "green";
-        btn.style.color = "white";
-    });
-});
-</script>
+/* BODY */
+.exam-body{
+    display:flex;
+    gap:20px;
+    padding:20px;
+}
+
+.left{
+    flex:3;
+    background:white;
+    padding:20px;
+    border-radius:10px;
+}
+
+.right{
+    flex:1;
+    background:white;
+    padding:20px;
+    border-radius:10px;
+}
+
+/* OPTIONS */
+.opt label{
+    display:block;
+    padding:12px;
+    margin:10px 0;
+    background:#f1f5f9;
+    border-radius:6px;
+}
+
+.opt input{
+    display:none;
+}
+
+.opt input:checked + label{
+    background:#bbf7d0;
+}
+
+/* GRID */
+.grid{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:10px;
+}
+
+.box{
+    padding:10px;
+    text-align:center;
+    background:#e5e7eb;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+.box.done{
+    background:#22c55e;
+    color:white;
+}
+
+/* NAV */
+.bottom-nav{
+    display:flex;
+    justify-content:space-between;
+    margin-top:20px;
+}
+
+.bottom-nav button{
+    padding:10px 15px;
+    background:#2563eb;
+    color:white;
+    border:none;
+    border-radius:6px;
+}
+
+</style>
+
+<?php include("includes/footer.php"); ?>

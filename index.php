@@ -1,8 +1,57 @@
-
-<?php 
+<?php
 session_start();
+
+if(!isset($_SESSION['user_id'])){
+    header("Location: login.php"); 
+    exit();
+}
+?>
+<?php 
 include("includes/header.php"); 
 ?>
+
+<style>
+
+/* 🔥 HERO IMPROVE */
+.welcome-card{
+    background: linear-gradient(135deg,#0f766e,#0ea5a5);
+    color:white;
+    text-align:center;
+    padding:30px;
+}
+
+/* Greeting fix */
+.welcome-card h2{
+    font-size:26px;   /* ❗ controlled size */
+    font-weight:600;
+    margin-bottom:10px;
+}
+
+/* Subtitle */
+.welcome-card p{
+    font-size:14px;
+    opacity:0.9;
+}
+
+/* Buttons spacing */
+.welcome-actions{
+    margin-top:15px;
+}
+
+/* Cards spacing */
+.card{
+    margin-bottom:20px;
+}
+
+/* Feature cards better look */
+.feature{
+    background:#f8fafc;
+    padding:15px;
+    border-radius:10px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.05);
+}
+
+</style>
 
 <div class="layout">
 
@@ -42,7 +91,8 @@ include("includes/header.php");
         $greeting = "Good Evening";
     }
 
-    $name = isset($_SESSION['name']) ? $_SESSION['name'] : "Guest";
+    // 🔥 NAME FIX (uppercase + safe)
+    $name = isset($_SESSION['name']) ? ucfirst($_SESSION['name']) : "Guest";
 
     // Quotes
     $quotes = [
@@ -59,7 +109,7 @@ include("includes/header.php");
     <!-- HERO -->
     <div class="card welcome-card">
 
-        <h2><?php echo $greeting; ?>, <?php echo ucfirst($name); ?> 👋</h2>
+        <h2><?php echo $greeting; ?>, <?php echo $name; ?> 👋</h2>
 
         <p>
             Start your journey today! Take your first test and unlock your potential.
@@ -168,4 +218,3 @@ include("includes/header.php");
 </div> <!-- layout -->
 
 <?php include("includes/footer.php"); ?>
-

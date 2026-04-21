@@ -1,4 +1,5 @@
 <?php
+ob_start(); 
 session_start();
 include("includes/db.php");
 
@@ -16,7 +17,7 @@ if(isset($_POST['login'])){
 
         // 🔐 verify hashed password
         if(password_verify($pass, $user['password'])){
-
+			$_SESSION['user_id'] = $user['id'];
             $_SESSION['user'] = $email;
             $_SESSION['name'] = $user['name'];
 
@@ -40,7 +41,7 @@ if(isset($_POST['login'])){
 <html>
 <head>
     <title>Login</title>
-    <link rel="stylesheet" href="/MCAPrepHub/Mca_Mock_Test/css/style.css">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body class="login-page">
@@ -91,3 +92,4 @@ function togglePassword(id){
 </script>
 </body>
 </html>
+<?php ob_end_flush(); ?>
